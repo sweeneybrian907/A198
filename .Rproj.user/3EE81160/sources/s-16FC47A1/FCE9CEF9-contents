@@ -1,0 +1,6 @@
+source('directoryInput.R')
+localLib <- "D:/temp/r_pkgs"
+.libPaths("D:/temp/r_pkgs")
+#install.packages(c("lubridate", "xlsx",'zoo', 'readxl', 'lattice', 'ggplot2',"grDevices","shiny", "stringr", "tidyverse"), lib = localLib)
+
+sapply(c("grDevices",'zoo', 'readxl',"shiny", "stringr", 'lattice', 'ggplot2',"reshape2", "lubridate", "scales", "readxl", "xlsx", "tidyverse"), require, character.only = T, lib.loc=localLib)

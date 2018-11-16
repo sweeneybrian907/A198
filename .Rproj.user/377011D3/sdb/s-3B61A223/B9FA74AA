@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "server <- function(input, output, session) {\n  options(shiny.maxRequestSize=50*1024^2) #increasing maximum upload size\n   observeEvent(\n     ignoreNULL = TRUE,\n     eventExpr = {\n       input$directory\n     },\n     handlerExpr = {\n       if (input$directory > 0) {\n        path = choose.dir(default = readDirectoryInput(session, 'directory'))\n        updateDirectoryInput(session, 'directory', value = path)\n        }\n     }\n   )\n \n\n   observeEvent(input$upload,{\n   \n       withProgress(message = 'Generating data', value = 0.14, {\n            list_2 <- read_files(readDirectoryInput(session, 'directory'))\n            mydata <<- as.tibble(list_2[[1]])\n       setProgress(.5)\n          date_name <- names(mydata)[1]\n          remove_cols <- c(date_name, \"date\")\n          duplicates <- duplicated(mydata[,1]) %>% which()\n          #removing duplicates\n          if(length(duplicates) > 0) {mydata <- mydata[-c(duplicates),]}\n\n          #removing columns\n          check <- mydata %>%\n            is.na() %>%\n            colSums()\n          nas_tib  <-   which(check==nrow(mydata))\n          if(length(nas_tib) >0)   mydata<- mydata[,-nas_tib]\n          setwd(readDirectoryInput(session, 'directory'))\n          mydata <- mydata %>%\n            mutate_at(date_name, funs(date = dmy(.))) %>%  #format date\n          arrange(date) %>%\n          select(-one_of(date_name)) %>%\n          select(date, everything())\n          setProgress(.7)\n            WriteXLS(\"mydata\", \"./klaeranlagen_daten.xlsx\", perl = \"B:/Programme/Perl_strawberry/perl/bin/perl\") #perl must be installed change path if necessary\n            \n       #      output$input <- renderUI({\n       # selectInput(\"input\", \"Eingangskonz. (input)\", choices = colnames(mydata))})\n       #         \n       #      output$output <- renderUI({\n       # selectInput(\"output\", \"Ausgangskonz. (output)\", choices = colnames(mydata))})\n       #     \n            output$tw <- renderUI({\n       selectInput(\"cum_sum\", \"Kumulative Summe\", choices = colnames(mydata))})    \n             \n        setProgress(1)\n        Sys.sleep(.35)\n      \n          \n       })\noutput$message<- renderText({paste(list_2[[2]])})\nshowNotification(\"Erfolgreich umgewandelt. Bitte überprüfen Sie die Tabelle. Sie ist abgespeichert im Arbeitsverzeichnis: klaeranlagen_daten.xlsx. Wenn alles stimmt können jetzt die entsprechenden Grafiken erstellt werden.\", type=\"message\", duration = NULL)\n     })\n      output$dry_cum_sum <- renderPlot( {ggplot(mydata, aes_string(input$cum_sum))+\n      stat_ecdf(geom = \"step\")+\n      theme_bw()+\n      ylab(\"Summenhäufigkeit\")+\n      xlab(paste(\"Trockenwetter Abfluss\",input$xlab))+\n      geom_hline(yintercept=.85, col=2, lwd=1.2)\n      })\n\n     # filename<- reactiveValues(input$save_as)\n\n# observe(input$download, {  \n#   if(input$save_as > 0) {\n#   dir.create(\"./plots/\", showWarnings = FALSE )\n#   ggsave(filename= filename(), path = \"./plots/\")}\n# }) \n\n}  \n\n\n",
+    "created" : 1535122472451.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3206913137",
+    "id" : "B9FA74AA",
+    "lastKnownWriteTime" : 1535122972,
+    "last_content_update" : 1535122972736,
+    "path" : "~/Uni/master/R practice/shiny/app/Klaeranlage_auswertung/server.r",
+    "project_path" : "server.r",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

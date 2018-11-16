@@ -1,0 +1,101 @@
+#preambel####
+
+localLib <- "D:/temp/r_pkgs"
+.libPaths("D:/temp/r_pkgs")
+
+install.packages(c("lubridate", "xlsx",'zoo', 'readxl', 'lattice', 'ggplot2',"grDevices","shiny", "stringr", "tidyverse"), lib = localLib)
+sapply(c("grDevices",'zoo', 'readxl',"shiny", "stringr", 'lattice', 'ggplot2',"reshape2", "lubridate", "scales", "readxl", "xlsx", "tidyverse"), require, character.only = T, lib.loc=localLib)
+
+setwd("D:/0my_desktop")
+source('directoryInput.R')
+
+#page design ####
+ui <- fluidPage(
+  
+    textInput(inputId= "path", label = "Pfad Einlesen des Ordners, der alle Dateien enth?lt." ),
+    includeText("./txt/read_file.txt"),
+      textOutput(outputId = "pfad_o"),
+    tableOutput("tib_head"),
+    tableOutput("tib_tail"),
+    textOutput(outputId = "message"),
+    actionButton("upload", label="Hochladen"),
+    directoryInput('directory', label = 'select a directory')
+    
+    )
+
+ 
+  
+#server ####
+server <- function(input, output) {
+  #read files
+  read_files = function(inDir, pat="*.csv", readMe=read.csv2){ #von Brian
+    files = list.files( pattern=pat)
+    files = lapply(files, function(x) file.path( x))
+    df = do.call(rbind, lapply(files, readMe)) #rbind them
+    return(df)
+  }
+  #inDir  <- ("..") ##
+  #tib = read_files("..") ##
+  observeEvent(
+    ignoreNULL = TRUE,
+    eventExpr = {
+      input$directory
+    },
+    handlerExpr = {
+      if (input$directory > 0) {
+        # condition prevents handler execution on initial app launch
+        
+        # launch the directory selection dialog with initial path read from the widget
+        path = choose.dir(default = readDirectoryInput(session, 'directory'))
+        
+        # update the widget value
+        updateDirectoryInput(session, 'directory', value = path)
+      }
+    }
+  )
+  
+  
+  # output$tib_head <- renderTable({
+  #   #input$upload
+  #   ##isolate() %>% 
+  #    # head() %>% 
+  #     read_files(inDir = get(input$path))
+  # })
+  # # tib <- eventReactive(input$upload, {
+  #     reactive({read_files(inDir = input$path) })  
+  #   }
+  # )
+  #directory <- reactive({directory <- input$path})
+  
+ # tib <- reactive({read_files(inDir = input$path) })  
+  
+  # tib$Date <- dmy(tib[,1]) 
+  # sorted <- order(tib$Date)
+  # tib <-  tib[sorted]
+  # remove(sorted)
+  # date_check <- diff(tib$Date)
+  # if(all(date_check == 1)) {output$message <- renderText({
+  #   print("Alles ok!")
+  # })
+  #   }else{
+  #     output$message <- renderText({
+  #     print("Alles ok!")
+  #   })
+  #   }    
+  #duplicates <- which(date_check == 0)}
+  
+     
+  
+  
+  
+}
+  # 
+  # rowsum[duplicates]
+  # tib[duplicates,1]
+  # tib[(duplicates+1),1]
+  
+
+  
+shinyApp(ui = ui, server = server)
+
+

@@ -1,0 +1,113 @@
+server <- function(input, output, session) {
+  options(shiny.maxRequestSize=50*1024^2) #increasing maximum upload size
+   observeEvent(
+     ignoreNULL = TRUE,
+     eventExpr = {
+       input$directory
+     },
+     handlerExpr = {
+       if (input$directory > 0) {
+        path = choose.dir(default = readDirectoryInput(session, 'directory'))
+        updateDirectoryInput(session, 'directory', value = path)
+        }
+     }
+   )
+ 
+   upload_data <- eventReactive(input$upload, {
+     withProgress(message = 'Generating data', value = 0.14, {
+       read_files(readDirectoryInput(session, 'directory'))
+       setProgress(1)
+       Sys.sleep(.35)
+     })
+    
+   })
+   
+ output$df <- renderTable({
+     
+     head(upload_data()[,1:7])
+   })
+   
+     # data_tc <- eventReactive(input$datum_formatieren, {
+     #   upload_data()[,1] <- dmy(upload_data()[,1])
+     # 
+     # if (input$datum_format == "dmy") {
+     #   upload_data()[,1] <- dmy(upload_data()[,1]) }
+     #   if (input$datum_format == "ymd") {
+     #     upload_data()[,1] <- ymd(upload_data()[,1]) }
+     #   })
+     
+     
+     #  res_dateformat <- get(input$datum_format)
+#, "ymd", "mdy")"    df[,1] <- input$datum_format
+   # })
+   
+   # output$message <- renderText({
+   #   range(data_tc()[,1])
+   #     })
+   # 
+
+   
+    
+}
+  #   output$message <- renderText({
+  #     input$upload
+  #   paste("Arbeitsverzeichnis", readDirectoryInput(session, 'directory'))
+  # })
+  #   
+  #   
+  #   observeEvent(input$upload,{
+  #   df <- save(read_files(readDirectoryInput(session, 'directory')))
+  #   })
+   
+     # output$downloadData <- downloadHandler(
+     #   filename = function() { 
+     #     paste('tabelle', '.csv', sep="") },
+     #   content = function(file) {
+     #     write.csv( df, file)
+     #   }
+     # )
+     
+     # 
+     # observe({
+     #   file = input$updated_table
+     #   if (is.null(file) ) {
+     #     return(NULL)
+     #   }
+     #   data1 = read.csv2(file$datapath)
+     #   
+     #   
+     # })
+     # 
+     
+     
+
+
+# mydata <<- reactive({
+#   df <<- read_files(readDirectoryInput(session, 'directory'))
+#   return(df)
+# })
+
+# tib <- observeEvent(input$upload,{
+#   read_files(readDirectoryInput(session, 'directory'))  
+#return(df)
+#    #assign("df", df, envir = .GlobalEnv)
+#})
+
+# check <- df %>% 
+#   is.na() %>% 
+#   colSums() 
+# nas_tib  <-   which(check==nrow(df)) 
+# 
+# no_na<- df[,-nas_tib]
+# 
+# write.xlsx(no_na, "./reinigungs_leistung_v1.xlsx", showNA=F)
+
+# 
+# 
+# output$tib_head <- renderTable({
+#   input$upload
+#   df <- read_files(readDirectoryInput(session, 'directory'))
+#   head(df)[,1:7]
+#  })
+
+

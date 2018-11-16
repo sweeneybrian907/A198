@@ -1,0 +1,37 @@
+server <- function(input, output, session) {
+  #read files
+  # read_files = function(inDir, pat="*.csv", readMe=read.csv2){ #von Brian
+  #   files = list.files(inDir, pattern=pat)
+  #   files = lapply(files, function(x) file.path(inDir, x))
+  #   df = do.call(rbind, lapply(files, readMe)) #rbind them
+  #   return(df)
+  # }
+  #inDir  <- ("..") ##
+  #tib = read_files("..") ##
+  observeEvent(
+    ignoreNULL = TRUE,
+    eventExpr = {
+      input$directory
+    },
+    handlerExpr = {
+      if (input$directory > 0) {
+        # condition prevents handler execution on initial app launch
+        
+        # launch the directory selection dialog with initial path read from the widget
+        path = choose.dir(default = readDirectoryInput(session, 'directory'))
+        
+        # update the widget value
+        updateDirectoryInput(session, 'directory', value = path)
+      }
+    }
+  )
+  
+  output$tib_head <- renderTable({
+    input$upload
+    solate() %>% 
+    head() %>% 
+    read_files(inDir = ".")
+    
+  })
+
+}

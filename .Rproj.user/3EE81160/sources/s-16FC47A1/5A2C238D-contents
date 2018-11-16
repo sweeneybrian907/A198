@@ -1,0 +1,10 @@
+ui <- fluidPage(
+  
+ #  textOutput(outputId = "pfad_o"),
+   tableOutput("tib_head"),
+  # tableOutput("tib_tail"),
+  # textOutput(outputId = "message"),
+   actionButton("upload", label="Hochladen"),
+  directoryInput('directory', label = 'select a directory')
+  
+)

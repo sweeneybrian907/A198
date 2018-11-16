@@ -1,0 +1,18 @@
+ui <- fluidPage(
+  
+  #  textOutput(outputId = "pfad_o"),
+   
+  # tableOutput("tib_tail"),
+   
+   
+  directoryInput('directory', label = 'select a directory'),
+  actionButton("upload", label="Hochladen"),
+  downloadButton("download", label="Runterladen"),
+  textOutput(outputId = "message"),
+  tableOutput("df"),
+  fileInput("updated_table",label="Bearbeitete Tabelle (als csv Datei)"),
+  downloadButton('downloadPlot', 'Grafiken runter laden')
+  
+)
+
+# es werden keine unterordner durchsucht

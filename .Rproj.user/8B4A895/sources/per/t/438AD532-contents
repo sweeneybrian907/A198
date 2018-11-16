@@ -1,0 +1,25 @@
+ui <- fluidPage(
+  
+  #  textOutput(outputId = "pfad_o"),
+   
+  # tableOutput("tib_tail"),
+   
+  "Bitte Pfad einlesen und auf Hochladen drücken. Dies kann einige Minuten Dauern!",
+  directoryInput('directory', label = 'select a directory'),
+  actionButton("upload", label="Hochladen"),
+  actionButton("show_data", "Tabelle zeigen"),
+  tableOutput("df"),
+  selectInput("date_format", label="Datums formatierung", choices = list("dmy", "ymd", "mdy")),
+  actionButton("action_format", label = "Jetzt formatieren"),
+  downloadButton("download", label="Runterladen"),
+  "Gefundene Dateien",
+  textOutput(outputId = "message"),
+  textOutput(outputId = "date"),
+ # uiOutput("found_data"),
+  
+  fileInput("updated_table",label="Bearbeitete Tabelle (als csv Datei)"),
+  downloadButton('downloadPlot', 'Grafiken runter laden')
+  
+)
+
+# es werden keine unterordner durchsucht

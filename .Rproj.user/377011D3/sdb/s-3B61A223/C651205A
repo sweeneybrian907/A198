@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "source('directoryInput.R')\n#localLib <- \"D:/temp/r_pkgs\"\n#.libPaths(\"D:/temp/r_pkgs\")\n#install.packages(c(\"lubridate\", \"xlsx\",'zoo', 'readxl', 'lattice', 'ggplot2',\"grDevices\",\"shiny\", \"stringr\", \"tidyverse\", \"WriteXLS\"))\nsapply(c(\"grDevices\",'zoo', 'readxl',\"shiny\", \"stringr\", 'lattice', 'ggplot2',\"reshape2\", \"lubridate\", \"scales\", \"readxl\", \"xlsx\", \"tidyverse\", \"WriteXLS\"), require, character.only = T)\n##\nread_files = function(inDir, pat=\"*.csv\", readMe=read_csv2){\n  files = list.files(inDir, pattern=pat)\n  files = lapply(files, function(x) file.path(inDir, x))\n  df = do.call(rbind, lapply(files, readMe))\n  return(list(df, files))\n}\n\n",
+    "created" : 1535122625051.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3314966483",
+    "id" : "C651205A",
+    "lastKnownWriteTime" : 1529866701,
+    "last_content_update" : 1529866701,
+    "path" : "~/Uni/master/R practice/shiny/app/Klaeranlage_auswertung/global.R",
+    "project_path" : "global.R",
+    "properties" : {
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

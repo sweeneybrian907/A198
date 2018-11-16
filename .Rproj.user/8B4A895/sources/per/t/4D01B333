@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1529659599104.000,
+    "dirty" : true,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2745823452",
+    "id" : "4D01B333",
+    "lastKnownWriteTime" : 1527517429,
+    "last_content_update" : 1529660063116,
+    "path" : "D:/0my_desktop/shiny/app/Klaeranlage_auswertung/auswertung_betreibstagebuecher.R",
+    "project_path" : "auswertung_betreibstagebuecher.R",
+    "properties" : {
+        "cursorPosition" : "53,0",
+        "scrollLine" : "32"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

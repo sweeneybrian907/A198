@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1528268907536.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3032181463",
+    "id" : "1AE72502",
+    "lastKnownWriteTime" : 1528195323,
+    "last_content_update" : 1528195323,
+    "path" : "D:/0my_desktop/shiny/app/Klaeranlage_auswertung/global.R",
+    "project_path" : "global.R",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

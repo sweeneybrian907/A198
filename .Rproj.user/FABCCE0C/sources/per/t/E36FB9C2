@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1540992989915.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3394033569",
+    "id" : "E36FB9C2",
+    "lastKnownWriteTime" : 1540995456,
+    "last_content_update" : 1540995456216,
+    "path" : "D:/repos/Klaeranlage_auswertung/server.r",
+    "project_path" : "server.r",
+    "properties" : {
+        "cursorPosition" : "51,0",
+        "marks" : "<:46,0\n>:51,-1",
+        "scrollLine" : "36"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
