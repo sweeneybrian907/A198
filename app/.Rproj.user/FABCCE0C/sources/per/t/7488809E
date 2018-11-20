@@ -9,9 +9,11 @@
     "id" : "7488809E",
     "lastKnownWriteTime" : 1535122666,
     "last_content_update" : 1535122666,
-    "path" : "D:/repos/Klaeranlage_auswertung/ui.r",
+    "path" : "D:/repos/A198/app/ui.r",
     "project_path" : "ui.r",
     "properties" : {
+        "cursorPosition" : "7,17",
+        "scrollLine" : "0"
     },
     "relative_order" : 4,
     "source_on_save" : false,

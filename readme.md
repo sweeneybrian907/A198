@@ -16,3 +16,7 @@ git clone https://github.com/sweeneybrian907/A198.git
 ```
 
 Run in R-Studio making sure to download all package dependencies.
+
+### points to address
+1. Date format must be in order: ddmmyy or ddmmyyyy any delimiter is possble. It mustn't contain time information ie: 02.05.2018 14:00
+2. Does not deal with UTF; if problems arise delete non utf8 charachters in the table no ü,ö,ä, °, $,€,@.... all special charachters
