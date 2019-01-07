@@ -1,4 +1,39 @@
-library(writexl)
+library(shiny)
+# shiny app user interface
+
+mainP <- mainPanel(
+    tabsetPanel(
+      tabPanel("Multivariate Plot", plotOutput("compPlot")),
+      tabPanel("85% Plot", plotOutput("eightyFivePlot")),
+      tabPanel("Wirkungsgrad", plotOutput("wirkungsgrad"))
+    )
+  )
+
+ui <- fluidPage(
+  titlePanel("A-198 Auswertung"),
+  h3("xlsx Datei einlesen um Daten interactive anzuschauen"),
+  br(),
+  hr(),
+  
+  sidebarLayout(
+     sidebarPanel(
+      helpText("Bitte Datei einlesen. Achtung die Datei müssen in der ersten Spalte das Datum haben (ohne Uhrzeit) im Format: Tag Monat Jahr (Trennzeichen egal)."),
+      fileInput('xlsx Dateie', label = 'xlsx Datei auswählen', multiple=FALSE, accept=c(".xlsx")),
+      textOutput("spalten_namen"),
+      tableOutput("table1"),
+      helpText("Jetzt die Eingangs- und Ausgangskonzentrationen auswählen für die Grafiken."),
+      uiOutput("input"),
+      uiOutput("output"),
+      uiOutput("tw"),
+      plotOutput("dry_cum_sum"),
+      textInput("xlab", "x-axen Beschriftung"),
+      actionButton('download', 'Grafiken runter laden'),
+      textInput("save_as", "Namen der zu speichernden Grafik")
+    ),
+  mainP, position="left")
+)
+
+# shiny app server
 server <- function(input, output, session) {
   options(shiny.maxRequestSize=50*1024^2) #increasing maximum upload size
    observeEvent(
@@ -61,12 +96,7 @@ server <- function(input, output, session) {
 output$message<- renderText({paste(list_2[[2]])})
 showNotification("Erfolgreich umgewandelt. Bitte überprüfen Sie die Tabelle. Sie ist abgespeichert im Arbeitsverzeichnis: klaeranlagen_daten.xlsx. Wenn alles stimmt können jetzt die entsprechenden Grafiken erstellt werden.", type="message", duration = NULL)
      })
-      output$dry_cum_sum <- renderPlot( {ggplot(mydata, aes_string(input$cum_sum))+
-      stat_ecdf(geom = "step")+
-      theme_bw()+
-      ylab("Summenhäufigkeit")+
-      xlab(paste("Trockenwetter Abfluss",input$xlab))+
-      geom_hline(yintercept=.85, col=2, lwd=1.2)
+      output$dry_cum_sum <- renderPlot( {ggplot_fun_tw(input$cum_sum, input$xlab)
       })
 
      # filename<- reactiveValues(input$save_as)
@@ -79,4 +109,4 @@ showNotification("Erfolgreich umgewandelt. Bitte überprüfen Sie die Tabelle. S
 
 }  
 
-
+shinyApp(ui, server)

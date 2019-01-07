@@ -1,28 +1,22 @@
-# Auswertung der KA Elzach Betriebstagebücher
+# Auswertung der KA Betriebstagebücher - A198
 # Brian Sweeney - 17.4.2018
+# Raphael Menke - 5.2018
+# Brian Sweeney - 11.2018
 #---------------------------------------------
-# install packages ####
-localLib <- "D:/temp/r_pkgs"
-.libPaths(localLib)
-
-load(paste0(localLib[1],"workspace.Rdata"))
-install.packages("tidyverse")
-install.packages(c("lubridate", "xlsx",'zoo', 'readxl', 'lattice', 'ggplot2',"grDevices"),        lib = localLib)
-sapply(c("grDevices",'zoo', 'readxl', 'lattice', 'ggplot2',"reshape2", "lubridate", "scales", "readxl", "xlsx"), require, character.only = T, lib.loc=localLib)
-
-library(tidyverse)
+#### load packages ####
+sapply(c("grDevices","zoo", "lattice", "ggplot2","reshape2", "lubridate", "scales", "readxl", "tidyverse"), require, character.only = T)
 
 # set system time to "GMT"
 Sys.setenv(TZ = "GMT")
 
 # if needed change the working directory to the needed path
-setwd("P:/02/ELZ/02ELZ17012/531_Wasser/04_Berechn/Betriebstagebuecher")
-setwd("./02ELZ17012_R_auswertung")
-pathToExcel = "P:/02/ELZ/02ELZ17012/531_Wasser/04_Berechn/Betriebstagebuecher/alt/02ELZ17012_Reinigungsleistung_2012-2017.xlsx" 
-exportpfad <- paste0(getwd(),"/r_graphics/")
-pathToCsv <- "P:/02/ELZ/02ELZ17012/531_Wasser/06_Grundlagen/Elzach_Betriebstageb?cher/"
-sheetName = 'gesamt'
-getwd()
+# setwd("P:/02/ELZ/02ELZ17012/531_Wasser/04_Berechn/Betriebstagebuecher")
+# setwd("./02ELZ17012_R_auswertung")
+# pathToExcel = "P:/02/ELZ/02ELZ17012/531_Wasser/04_Berechn/Betriebstagebuecher/alt/02ELZ17012_Reinigungsleistung_2012-2017.xlsx" 
+# exportpfad <- paste0(getwd(),"/r_graphics/")
+# pathToCsv <- "P:/02/ELZ/02ELZ17012/531_Wasser/06_Grundlagen/Elzach_Betriebstageb?cher/"
+# sheetName = 'gesamt'
+# getwd()
 
 # import betriebstagebücher von excel -- (Betreibstagebücher were merged in Excel in the sheet "gesamt")
 # change variables above to import another file
@@ -100,7 +94,7 @@ png(paste0(exportpfad, colnamesx,".png"), res=200, width = 15.5, height = 9.62, 
     p <- ggplot(df, aes_string(colnamesx)) +
   stat_ecdf(geom = "step")+
   theme_bw()+
-  ylab("Summenh?ufigkeit")+
+  ylab("Summenhäufigkeit")+
   xlab(xlab)+
       geom_hline(yintercept=.85, col=2, lwd=1.2)
   })

@@ -9,3 +9,7 @@
 
 # Shiny token, see https://shiny.rstudio.com/articles/shinyapps.html
 rsconnect/
+
+# ignore swp files
+*.swp
+.Rproj.user

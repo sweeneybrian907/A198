@@ -1,6 +1,0 @@
-mit / nicht \ "D:/0my_desktop/shiny/txt"
-die Tabelle muss im csv Format sein
-mit "," als Dezimalzeichen
-und ;  als Seperator (standart)
-Alle Tabellen haben die (exakt!) selbe Spalten anzahl und Namen
-die erste Spalte ist die Datums spalte im Format dd:mm:yyyy
