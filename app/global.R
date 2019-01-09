@@ -1,6 +1,3 @@
-source('directoryInput.R')
-#localLib <- "D:/temp/r_pkgs"
-#.libPaths("D:/temp/r_pkgs")
 #install.packages(c('zoo', 'readxl',"shiny", 'stringr', 'lattice', 'ggplot2', 'reshape2', 'lubridate', 'scales', 'tidyverse', 'WriteXLS', 'writexl'))
 sapply(c("grDevices",'zoo', 'readxl',"shiny", "stringr", 'lattice', 'ggplot2',"reshape2", "lubridate", "scales", "tidyverse", "WriteXLS", "writexl", "tcltk"), require, character.only = T)
 
