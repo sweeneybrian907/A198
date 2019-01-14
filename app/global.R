@@ -14,7 +14,7 @@ ggplot_fun_tw <- function(df, colnamesx, xlab){
       stat_ecdf(geom = "step") +
       theme_bw() +
       ylab("Summenhäufigkeit") +
-      xlab(paste("Trockenwetter Abfluss",xlab)) +
+      xlab(xlab) +
       geom_hline(yintercept=.85, col=2, lwd=1.2)
   return(p)
 }
@@ -31,7 +31,7 @@ ggplot_fun_tw <- function(df, colnamesx, xlab){
 # name (str): name of substance to be evaluated
 # pathOut (str): path to output png as string
 
-gg_barplot <- function(df, datecol, year, sub_in, sub_out, grenzwert, name, pathOut){
+gg_barplot <- function(df, datecol, year, sub_in, sub_out, grenzwert, paramame){
   # prepare data to plot
   part <- df[year(df[,datecol]) == yearx,]
   part <- rbind(part[grep(sub_in, part$variable),],part[grep(sub_out, part$variable),]) 
@@ -47,7 +47,7 @@ gg_barplot <- function(df, datecol, year, sub_in, sub_out, grenzwert, name, path
                         name="Legende",
                         labels=c("Ablauf", "Zulauf"),
                         guide=guide_legend(reverse = TRUE)) +
-    scale_y_continuous(paste(name, "[mg/l]")) +
+    scale_y_continuous(paste(paramName, "[mg/l]")) +
     theme_bw()
   
   return(p)
