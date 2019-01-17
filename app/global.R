@@ -27,10 +27,8 @@ ggplot_fun_tw <- function(df, colnamesx, xlab){
 # year (num): year to be evaluated
 # sub_in (num): concentration of substance at inlet
 # sub_out (num): concentration of substanc at outflow
-# threshold (num): given threshold value for the discharge concentration
-# name (str): name of substance to be evaluated
-# pathOut (str): path to output png as string
-
+# grenzwert (num): given threshold value for the discharge concentration
+# paramname (str): name of substance to be evaluated
 gg_barplot <- function(df, datecol, year, sub_in, sub_out, grenzwert, paramame){
   # prepare data to plot
   part <- df[year(df[,datecol]) == yearx,]

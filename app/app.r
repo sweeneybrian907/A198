@@ -19,13 +19,27 @@ ui <- fluidPage(
   sidebarPanel(
   helpText("Bitte Datei einlesen"),
   fileInput('xlsxIn', label = 'xlsx Datei auswählen', multiple=FALSE, accept=c(".xlsx")),
+  selectInput("plotType", "Grafiktyp", selected = "Multivariate",
+    choices = c("Multivariate", "Cumsum", "Wirkungsgrad")),
   helpText("Eingangs- und Ausgangskonzentrationen auswählen für die Grafiken."),
-  uiOutput("paramIn"),
-  uiOutput("paramOut"),
-  uiOutput("cumParam"),
-  uiOutput("tw"),
-  selectInput("plot_type", "Grafiktyp", selected = "Multivariate",
-  choices = c("Multivariate", "Cumsum", "Wirkungsgrad")),
+  # conditional input multivariate plot
+  conditionalPanel(condition = "input.plotType == 'Multivariate'",
+                   uiOutput("paramInMulti"),
+                   uiOutput("paramOutMulti"),
+                   uiOutput("twMulti") ),
+  # conditiaonl input cumulative sum plot
+  conditionalPanel(condition = "input.plotType == 'Cumsum'",
+                   uiOutput("cumParam"),
+                   uiOutput("twCumSum")),
+  # conditional input Wirkungsgrad
+  conditionalPanel(condition = "input.plotType == 'Wirkungsgrad'",
+                   uiOutput("paramIn"),
+                   uiOutput("paramOut"),
+                   uiOutput("dateCol"),
+                   uiOutput("year"),
+                   numericInput("grenzwert", label="Param. Grenzwert", value=2.0),
+                   uiOutput("tw")),
+  
   textInput("xlab", "X-axen Beschriftung"), #,
   textInput("ylab", "Y-axen Beschriftung") #,
   # TODO - create download link for displayed graphic
@@ -34,67 +48,62 @@ ui <- fluidPage(
   ),
   mainP, position="left")
 )
+
+
 # shiny app server
 server <- function(input, output, session) {
   options(shiny.maxRequestSize=50*1024^2) #increasing maximum upload size
-  #   tryCatch({
-  #     tabIn <- read_xlsx(input$xlsxIn$datapath)
-  #   },
-  #   error = function(e){
-  #     # return safe error if parsing error occurs
-  #     stop(safeError(e))
-  #   }
-  #   return(tabIn)
-  # )})
-  observeEvent(input$xlsxIn,
-    observeEvent(input$plot_type, {
-      req(input$xlsxIn)
-      tabIn <- read_xlsx(input$xlsxIn$datapath)
-      output$tabIn <- renderTable({
-      return(head(tabIn))
-    })
-    if(input$plot_type %in% c("Multivariate", "Wirkungsgrad")){
-      output$paramIn <- renderUI({
-        selectInput("paramIn", "Eingangskonz. (input)", choices = colnames(tabIn))})
-      output$paramOut <- renderUI({
-        selectInput("paramOut", "Ausgangskonz. (output)", choices = colnames(tabIn))})
-      output$tw <- renderUI({
-        selectInput("tw", "Trockenwetter (1/0) filter", choices = colnames(tabIn))})
+  
+  tabIn <- reactive({
+    xlsxIn <- input$xlsxIn
+    if (is.null(xlsxIn)){
+      return(NULL)
     }
-    else(
-      if(input$plot_type == "Cumsum"){
-        output$cumParam <- renderUI({
-          selectInput("cumParam", "Parameter kumulative Summe", choices = colnames(tabIn))})
-        output$tw <- renderUI({
-          selectInput("tw", "Trockenwetter (1/0) filter", choices = colnames(tabIn))})
-        if(is.null(input$tw)){
-          output$plotOut <- renderPlot({ggplot_fun_tw(tabIn, input$cumParam, input$xlab)})
-        } else({
-          filt <- which(tabIn[,input$tw] == 1)
-          output$plotOut <- renderPlot({ggplot_fun_tw(tabIn[filt,], input$cumParam, input$xlab)})
-        })
+    read_xlsx(xlsxIn$datapath)
     })
+  
+  colsIn <- reactive({
+    df <- tabIn()
+    if (is.null(df)) return(NULL)
+    names(df)
   })
-)
-#
-#   observeEvent(iput$paramIn, {
-#             output$paramIn <- renderUI({
-#               selectInput("paramIn", "Eingangskonz. (input)", choices = colnames(tabIn))})
-#   })
-#   observeEvent(
-#             output$paramOut <- renderUI({
-#               selectInput("paramOut", "Ausgangskonz. (output)", choices = colnames(tabIn))})
-#
-#             output$tw <- renderUI({
-#        selectInput("cum_sum", "Kumulative Summe", choices = colnames(tabIn))})
-#
-#         setProgress(1)
-#         Sys.sleep(.35)
-# filename<- reactiveValues(input$save_as)
-# observe(input$download, {
-#   if(input$save_as > 0) {
-#   dir.create("./plots/", showWarnings = FALSE )
-#   ggsave(filename= filename(), path = "./plots/")}
-# })
+  
+  output$tabIn <- renderTable({head(tabIn())})
+
+  observeEvent(input$plotType, { 
+    req(tabIn())
+    if(input$plotType == "Multivariate"){
+      output$paramInMulti <- renderUI({
+        selectInput("paramInMulti", "Eingangskonz. (input)", choices = colsIn())})
+      output$paramOutMulti <- renderUI({
+        selectInput("paramOutMulti", "Ausgangskonz. (output)", choices = colsIn())})
+      output$twMulti <- renderUI({
+        selectInput("tw", "Trockenwetter (1/0) filter", choices = colsIn())})
+    } else if(input$plotType == "Wirkungsgrad"){
+      output$paramIn <- renderUI({
+        selectInput("paramIn", "Eingangskonz. (input)", choices = colsIn())})
+      output$paramOut <- renderUI({
+        selectInput("paramOut", "Ausgangskonz. (output)", choices = colsIn())})
+      output$tdateCol<- renderUI({
+        selectInput("dateCol", "Datum Spalte", choices = colsIn())})
+      output$year <- renderUI({
+        selectInput("year", "Jahr filter", choices = colsIn())})
+      output$tw <- renderUI({
+        selectInput("tw", "Trockenwetter (1/0) filter", choices = colsIn())})
+    } else if(input$plotType == "Cumsum"){
+      output$cumParam <- renderUI({
+        selectInput("cumParam", "Parameter kumulative Summe", choices = colsIn())})
+      output$twCumSum <- renderUI({
+        selectInput("twCumSum", "Trockenwetter (1/0) filter", choices = colsIn())})
+      if(is.null(input$twCumSum)){
+        output$plotOut <- renderPlot({ggplot_fun_tw(tabIn(), input$cumParam, input$xlab)})
+      } 
+      else {
+        filt <- which(tabIn[,input$twCumSum] == 1)
+        output$plotOut <- renderPlot({ggplot_fun_tw(tabIn()[filt,], input$cumParam, input$xlab)})
+      }
+    }
+  })
 }
+
 shinyApp(ui, server)
